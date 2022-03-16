@@ -22,7 +22,7 @@
     color: var(--color1);
 }
 
-/* specific to shortest path */
+/* styling specific to shortest path */
 table {
     margin-left: auto;
     margin-right: auto;
