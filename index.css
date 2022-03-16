@@ -41,3 +41,7 @@ table button {
     width: 20px;
     height: 20px;
 }
+
+.colorButtons button {
+    min-width: 100px;
+}

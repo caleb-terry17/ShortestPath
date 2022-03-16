@@ -3,7 +3,12 @@
 ///////////////////
 
 let table = document.getElementById("table");  // table to dispaly search
-let actionColor = "#E70000";  // starts out as red
+
+// colors
+let red = "#E70000";
+let yellow = "#FFF827";
+let green = "#00E700";
+let selectionColor = yellow;  // starts out as red
 
 ///////////////////
 // table
@@ -30,17 +35,40 @@ function renderTable() {
         // appending row to table
         table.appendChild(tr);
     }
+
+    // adding informative text on next steps
+    document.getElementById("tableText").innerHTML = "Select barriers and the starting and ending points for search by clicking on the squares. <br> Barriers will be highlighted in yellow, starting point in green, and ending point in red. <br>"
+
+    // adding color selection buttons
+    // green
+    let button = document.createElement('button');
+    button.style.background = green;
+    button.innerHTML = "Start";
+    button.onclick = function () { selectionColor = green; }
+    document.getElementById("colorButtons").appendChild(button);
+    // yellow
+    button = document.createElement('button');
+    button.style.background = yellow;
+    button.innerHTML = "Barriers";
+    button.onclick = function () { selectionColor = yellow; }
+    document.getElementById("colorButtons").appendChild(button);
+    // red
+    button = document.createElement('button');
+    button.style.background = red;
+    button.innerHTML = "End";
+    button.onclick = function () { selectionColor = red; }
+    document.getElementById("colorButtons").appendChild(button);
 }
 
-// changes the color of the square selected to the "action" color
+// changes the color of the square selected to the "selection" color
 function select(row, col) {
     let button = table.children[row].children[col].children[0];  // button the user selected
-    // "&nbsp;" tells me that the button's color is currently set to the "action" color
-    if (button.innerHTML == "&nbsp;") {  // button is already action color, revert to white
+    // "&nbsp;" tells me that the button's color is currently set to the "selection" color
+    if (button.innerHTML == "&nbsp;") {  // button is already selection color, revert to white
         button.style.background = "#FFF";
         button.innerHTML = "";
-    } else {  // otherwise => change to action color
-        button.style.background = actionColor;
+    } else {  // otherwise => change to selection color
+        button.style.background = selectionColor;
         button.innerHTML = "&nbsp;";
     }
 }
