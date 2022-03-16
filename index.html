@@ -37,21 +37,27 @@
     <!--input text box-->
     <div class="container">
         <h1 class="text">Try It!</h1>
-        <p class="text">Enter...</p>
+        <p class="text">Size of Table: </p>
         
         <br>
 
         <!--needs to be a file input or a set of characters-->
-        <label class="text" for="chars">(input here)</label>
-        <input type="text" id="chars" name="chars"><br><br>
-        <button onclick="computeSP()">
-            (button here)
+        <label class="text" for="rows">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rows:</label>
+        <input type="text" id="rows" name="rows"><br><br>
+        <label class="text" for="cols">Columns:</label>
+        <input type="text" id="cols" name="cols"><br><br>
+        <button onclick="renderTable()">
+            Generate Table
         </button>  
         
         <br>
         <br>
 
         <div id="hcOut"></div>
+
+        <!--table that displays algorithm running-->
+        <table id="table">
+        </table>
     </div>
 
     <!--JavaScript: for hc logic-->
