@@ -12,6 +12,11 @@ let green = "#00E700";
 let blue = "#0000FF";
 let selectionColor = yellow;  // starts out as red
 
+// number of each square
+let numRed = 0;
+let numYellow = 0;
+let numGreen = 0;
+
 ///////////////////
 // table
 ///////////////////
@@ -79,6 +84,21 @@ function select(row, col) {
         button.style.background = "#FFF";
         button.innerHTML = "";
     } else {  // otherwise => change to selection color
+        // checking number of red and green squares before making change
+        if (selectionColor == green) {  // green
+            if (numGreen > 0) { 
+                console.log("throw error");
+
+                return;
+            } else { numGreen++; }
+        } else if (selectionColor == red) {  // red
+            if (numRed > 0) { 
+                console.log("throw error"); 
+                
+                return;
+            } else { numRed++; }
+        }
+        // setting square color
         button.style.background = selectionColor;
         button.innerHTML = "&nbsp;";
     }
@@ -94,5 +114,3 @@ function setSelection(color) {
 ///////////////////
 
 function computeSP() {}
-
-function clickMe(num) { console.log(num); }
