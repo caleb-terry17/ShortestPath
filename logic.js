@@ -10,16 +10,29 @@ let red = "#E70000";
 let yellow = "#FFF827";
 let green = "#00E700";
 let blue = "#0000FF";
-let selectionColor = yellow;  // starts out as red
+let white = "#FFF";
+let selectionColor = yellow;  // starts out as yellow (barriers)
+let selectionLetter = 'y';
 
 // number of each square
 let numRed = 0;
 let numYellow = 0;
 let numGreen = 0;
 
+/////////
+// array to store the color of each button
+// g: button is green (start point)
+// y: button is yellow (barrier)
+// r: button is red (end point)
+// e: button is empty or blank
+// b: button is blue (path)
+/////////
+let buttonColors = [];
+
 ///////////////////
 // table
 ///////////////////
+
 // renders the table the user will see
 function renderTable() {
     // checking if table and color buttons are already rendered
@@ -30,9 +43,11 @@ function renderTable() {
     let rows = parseInt(document.getElementById("rows").value);
     let cols = parseInt(document.getElementById("cols").value);
     for (let row = 0; row < rows; ++row) {
+        buttonColors.push([]);
         let tr = document.createElement('tr');
         // creating each column in the row
         for (let col = 0; col < cols; ++col) {
+            buttonColors[row][col] = 'e';  // button is currently empty
             // creating tags for row, col index of table
             let button = document.createElement('button');
             let td = document.createElement('td');
@@ -49,64 +64,48 @@ function renderTable() {
     // adding informative text on next steps
     document.getElementById("tableText").innerHTML = "Select barriers and the starting and ending points for search by clicking on the squares. <br> Barriers will be highlighted in yellow, starting point in green, and ending point in red. <br>"
 
-    colorButtons.innerHTML = '<button onclick="clickMe(0);">clickMe</button> &nbsp; <button onclick="clickMe(1);">clickMe</button>';
-
     // adding color selection buttons
-    // green
-    let greenButton = `<button style="background-color: #00E700" onclick="setSelection('#00E700')">Start</button>`;
-    // button.style.background = green;
-    // button.innerHTML = "Start";
-    // button.onclick = function () { selectionColor = green; }
-    // colorButtons.appendChild(button);
-    // yellow
-    let yellowButton = `<button style="background-color: #FFF827" onclick="setSelection('#FFF827')">Barrier</button>`;
-    // button = document.createElement('button');
-    // button.style.background = yellow;
-    // button.innerHTML = "Barriers";
-    // button.onclick = function () { selectionColor = yellow; }
-    // colorButtons.appendChild(button);
-    // red
-    let redButton = `<button style="background-color: #E70000" onclick="setSelection('#E70000')">End</button>`;
-    // button = document.createElement('button');
-    // button.style.background = red;
-    // button.innerHTML = "End";
-    // button.onclick = function () { selectionColor = red; }
-    // colorButtons.appendChild(button);
-
+    let greenButton = `<button style="background-color: ${green}" onclick="setSelection('${green}')" name="e">Start</button>`;
+    let yellowButton = `<button style="background-color: ${yellow}" onclick="setSelection('${yellow}')" name="e">Barrier</button>`;
+    let redButton = `<button style="background-color: ${red}" onclick="setSelection('${red}')" name="e">End</button>`;
     colorButtons.innerHTML = greenButton + "&nbsp;" + yellowButton + "&nbsp;" + redButton;
 }
 
 // changes the color of the square selected to the "selection" color
 function select(row, col) {
     let button = table.children[row].children[col].children[0];  // button the user selected
-    // "&nbsp;" tells me that the button's color is currently set to the "selection" color
-    if (button.innerHTML == "&nbsp;") {  // button is already selection color, revert to white
-        button.style.background = "#FFF";
-        button.innerHTML = "";
-    } else {  // otherwise => change to selection color
-        // checking number of red and green squares before making change
-        if (selectionColor == green) {  // green
+    console.log(buttonColors[row][col]);
+    // 'e' tells me that the button's color is currently set to empty
+    if (buttonColors[row][col] == 'e') {
+        // check that there's not already a red or green button if red or green
+        if (selectionColor == green) {
             if (numGreen > 0) { 
                 console.log("throw error");
-
                 return;
             } else { numGreen++; }
-        } else if (selectionColor == red) {  // red
-            if (numRed > 0) { 
-                console.log("throw error"); 
-                
+        } else if (selectionColor == red) {
+            if (numRed > 0) {
+                console.log("throw error");
                 return;
             } else { numRed++; }
         }
-        // setting square color
-        button.style.background = selectionColor;
-        button.innerHTML = "&nbsp;";
+        button.style.background = selectionColor;  // set button color
+        buttonColors[row][col] = selectionLetter;
+    } else {  // otherwise => change to empty
+        // checking to see if start, end points are being changed
+        if (buttonColors[row][col] == 'g') { numGreen--; }
+        else if (buttonColors[row][col] == 'r') { numRed--; }
+        button.style.background = white;
+        buttonColors[row][col] = 'e';
     }
 }
 
 // changes the selection color
 function setSelection(color) {
     selectionColor = color;
+    if (color == green) { selectionLetter = 'g'; }
+    else if (color == yellow) { selectionLetter = 'y'; }
+    else { selectionLetter = 'r'; }
 }
 
 ///////////////////
