@@ -42,6 +42,7 @@ table button {
     height: 20px;
 }
 
-.colorButtons button {
-    min-width: 100px;
-}
+/* div .colorButtons {
+    margin-left: auto;
+    margin-right: auto;
+} */
