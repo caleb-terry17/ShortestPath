@@ -81,12 +81,12 @@ function select(row, col) {
         // check that there's not already a red or green button if red or green
         if (selectionColor == green) {
             if (numGreen > 0) { 
-                console.log("throw error");
+                alert("There can only be 1 green/start position");
                 return;
             } else { numGreen++; }
         } else if (selectionColor == red) {
             if (numRed > 0) {
-                console.log("throw error");
+                alert("There can only be 1 red/end position");
                 return;
             } else { numRed++; }
         }
