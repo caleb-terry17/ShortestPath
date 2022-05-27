@@ -21,6 +21,7 @@ let numGreen = 0;
 
 /////////
 // array to store the color of each button
+// will also be used to run search on table
 // g: button is green (start point)
 // y: button is yellow (barrier)
 // r: button is red (end point)
@@ -109,7 +110,12 @@ function setSelection(color) {
 }
 
 ///////////////////
-// shortest path
+// shortest path algorithms
 ///////////////////
+// dijkstra's 
+/* steps:
+ * 1) 
+ * 2) 
+ */
 
 function computeSP() {}
