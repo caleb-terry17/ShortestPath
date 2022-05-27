@@ -113,9 +113,16 @@ function setSelection(color) {
 // shortest path algorithms
 ///////////////////
 // dijkstra's 
+// each index in the graph needs to hold
+    // 1) its color
+    // 2) parent
+    // 3) current distance from source
 /* steps:
- * 1) 
- * 2) 
+ * 1) find position of start, end blocks
+ * 2) set all vertices parent to NULL and distance to INF, source to 0
+ * 3) start at start block
+ * 4) relax each edge
+ * 5) 
  */
 
 function computeSP() {}
