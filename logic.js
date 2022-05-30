@@ -19,8 +19,12 @@ let numRed = 0;
 let numYellow = 0;
 let numGreen = 0;
 
+// start and end locations
+let startPos = {"row": null, "col": null};
+let endPos = {"row": null, "col": null};
+
 /////////
-// array to store the color of each button
+// array to store the color of each button, it's parent in the search, and search cost
 // will also be used to run search on table
 // g: button is green (start point)
 // y: button is yellow (barrier)
@@ -28,7 +32,8 @@ let numGreen = 0;
 // e: button is empty or blank
 // b: button is blue (path)
 /////////
-let buttonColors = [];
+// {"value": , "parent": , "depth": }
+let searchTable = [];
 
 ///////////////////
 // table
@@ -44,11 +49,11 @@ function renderTable() {
     let rows = parseInt(document.getElementById("rows").value);
     let cols = parseInt(document.getElementById("cols").value);
     for (let row = 0; row < rows; ++row) {
-        buttonColors.push([]);
+        searchTable.push([]);
         let tr = document.createElement('tr');
         // creating each column in the row
         for (let col = 0; col < cols; ++col) {
-            buttonColors[row][col] = 'e';  // button is currently empty
+            searchTable[row][col] = {"value": 'e', "parent": null, "depth": Infinity};  // button is currently empty
             // creating tags for row, col index of table
             let button = document.createElement('button');
             let td = document.createElement('td');
@@ -75,29 +80,45 @@ function renderTable() {
 // changes the color of the square selected to the "selection" color
 function select(row, col) {
     let button = table.children[row].children[col].children[0];  // button the user selected
-    console.log(buttonColors[row][col]);
+    console.log(searchTable[row][col].value + "-" + searchTable[row][col].parent + "-" + searchTable[row][col].depth);
     // 'e' tells me that the button's color is currently set to empty
-    if (buttonColors[row][col] == 'e') {
+    if (searchTable[row][col].value == 'e') {
         // check that there's not already a red or green button if red or green
         if (selectionColor == green) {
             if (numGreen > 0) { 
                 alert("There can only be 1 green/start position");
                 return;
-            } else { numGreen++; }
+            } else { 
+                numGreen++; 
+                startPos.row = row;
+                startPos.col = col;
+            }
         } else if (selectionColor == red) {
             if (numRed > 0) {
                 alert("There can only be 1 red/end position");
                 return;
-            } else { numRed++; }
+            } else { 
+                numRed++; 
+                endPos.row = row;
+                endPos.col = col;
+            }
         }
         button.style.background = selectionColor;  // set button color
-        buttonColors[row][col] = selectionLetter;
+        searchTable[row][col].value = selectionLetter;
     } else {  // otherwise => change to empty
         // checking to see if start, end points are being changed
-        if (buttonColors[row][col] == 'g') { numGreen--; }
-        else if (buttonColors[row][col] == 'r') { numRed--; }
+        if (searchTable[row][col].value == 'g') { 
+            numGreen--; 
+            startPos.row = null;
+            startPos.col = null;
+        }
+        else if (searchTable[row][col].value == 'r') { 
+            numRed--; 
+            endPos.row = null;
+            endPos.col = null;
+        }
         button.style.background = white;
-        buttonColors[row][col] = 'e';
+        searchTable[row][col].value = 'e';
     }
 }
 
@@ -124,5 +145,6 @@ function setSelection(color) {
  * 4) relax each edge
  * 5) 
  */
-
-function computeSP() {}
+function computeSP() {
+    
+}
