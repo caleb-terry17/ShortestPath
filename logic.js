@@ -4,6 +4,7 @@
 
 let table = document.getElementById("table");  // table to dispaly search
 let colorButtons = document.getElementById("colorButtons");  // div tag that will hold color selection buttons
+let computeButton = document.getElementById("compute");  // div tag that is used to hold the button to compute sp
 
 // colors
 let red = "#E70000";
@@ -35,6 +36,9 @@ let endPos = {"row": null, "col": null};
 // {"value": , "parent": , "depth": }
 let searchTable = [];
 
+// number of rows and columns in the table
+let tableRows, tableCols;
+
 ///////////////////
 // table
 ///////////////////
@@ -46,13 +50,13 @@ function renderTable() {
     if (colorButtons.children[0] !== undefined) { colorButtons.innerHTML = ""; }
 
     // filling table
-    let rows = parseInt(document.getElementById("rows").value);
-    let cols = parseInt(document.getElementById("cols").value);
-    for (let row = 0; row < rows; ++row) {
+    tableRows = parseInt(document.getElementById("rows").value);
+    tableCols = parseInt(document.getElementById("cols").value);
+    for (let row = 0; row < tableRows; ++row) {
         searchTable.push([]);
         let tr = document.createElement('tr');
         // creating each column in the row
-        for (let col = 0; col < cols; ++col) {
+        for (let col = 0; col < tableCols; ++col) {
             searchTable[row][col] = {"value": 'e', "parent": null, "depth": Infinity};  // button is currently empty
             // creating tags for row, col index of table
             let button = document.createElement('button');
@@ -75,12 +79,18 @@ function renderTable() {
     let yellowButton = `<button style="background-color: ${yellow}" onclick="setSelection('${yellow}')" name="e">Barrier</button>`;
     let redButton = `<button style="background-color: ${red}" onclick="setSelection('${red}')" name="e">End</button>`;
     colorButtons.innerHTML = greenButton + "&nbsp;" + yellowButton + "&nbsp;" + redButton;
+
+    // creating compute button 
+    let button = document.createElement('button');
+    button.innerHTML = "Compute Shortest Path";
+    button.onclick = function () { return computeSP() };
+    computeButton.appendChild(button);
 }
 
 // changes the color of the square selected to the "selection" color
 function select(row, col) {
     let button = table.children[row].children[col].children[0];  // button the user selected
-    console.log(searchTable[row][col].value + "-" + searchTable[row][col].parent + "-" + searchTable[row][col].depth);
+    console.log("before: " + searchTable[row][col].value + "-" + searchTable[row][col].parent + "-" + searchTable[row][col].depth);
     // 'e' tells me that the button's color is currently set to empty
     if (searchTable[row][col].value == 'e') {
         // check that there's not already a red or green button if red or green
@@ -104,6 +114,7 @@ function select(row, col) {
             }
         }
         button.style.background = selectionColor;  // set button color
+        // set new attributes of table
         searchTable[row][col].value = selectionLetter;
     } else {  // otherwise => change to empty
         // checking to see if start, end points are being changed
@@ -120,6 +131,7 @@ function select(row, col) {
         button.style.background = white;
         searchTable[row][col].value = 'e';
     }
+    console.log("after: " + searchTable[row][col].value + "-" + searchTable[row][col].parent + "-" + searchTable[row][col].depth);
 }
 
 // changes the selection color
@@ -146,5 +158,65 @@ function setSelection(color) {
  * 5) 
  */
 function computeSP() {
+    // all vertices already set to null parent, inf depth
+    // set source to null, 0
+    searchTable[startPos.row][startPos.col].depth = 0;
+
+    // queue
+    // push row, col pair of the next node to be popped
+    let queue = [];
+    for (let row = 0; row < tableRows; ++row) {
+        for (let col = 0; col < tableCols; ++col) {
+            if (searchTable[row][col].value != 'y') {
+                queue.push({"row": row, "col": col});
+            }
+        }
+    }
+    // queue.sort(function);  // sort the array by depth
+    // queue.shift();  // removes and returns first element from the array
+    // queue.push(elem);  // pushes a new element to the end of the array
     
+    // while there's still a node in the queue to search
+    while (queue.length > 0) {
+        // sort to get min at beginning
+        queue.sort((a, b) => {
+            return searchTable[a.row][a.col].depth < searchTable[b.row][b.col].depth;
+        });
+        // remove min element from queue
+        let min = queue.shift();
+
+        // for all of min's neighbors
+            // each node has a 3x3 grid where it's the center,
+            // iterate from top left to bottom right, check to make 
+            // sure it's not a barrier and it's not out of bounds
+        for (let rOffset = -1; rOffset <= 1; ++rOffset) {
+            for (let cOffset = -1; cOffset <= 1; ++cOffset) {
+                // make sure it's within the bounds 
+                if (min.row + rOffset < 0 || 
+                    min.row + rOffset >= tableRows ||
+                    min.col + cOffset < 0 ||
+                    min.col + cOffset >= tableCols) {
+                    continue;
+                }
+
+                // make sure not a barrier
+                console.log("r: " + (min.row + rOffset));
+                console.log("c: " + (min.col + cOffset));
+                if (searchTable[min.row + rOffset][min.col + cOffset].value == 'y') {
+                    continue;
+                }
+
+                // relax vertex
+                if (searchTable[min.row + rOffset][min.col + cOffset].depth > searchTable[min.row][min.col].depth + 1) {
+                    searchTable[min.row + rOffset][min.col + cOffset].depth = searchTable[min.row][min.col].depth + 1;
+                }
+            }
+        }
+
+        // color the min button as searched
+        if (searchTable[min.row][min.col].value != 'g' && 
+            searchTable[min.row][min.col].value != 'r') {
+            table.children[min.row].children[min.col].children[0].style.background = blue;
+        }
+    }
 }
