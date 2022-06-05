@@ -49,6 +49,9 @@ function renderTable() {
     if (table.children[0] !== undefined) { table.innerHTML = ""; }
     if (colorButtons.children[0] !== undefined) { colorButtons.innerHTML = ""; }
 
+    // checking if compute button is already rendered
+    if (computeButton.children[0] !== undefined) { computeButton.innerHTML = ""; }
+
     // filling table
     tableRows = parseInt(document.getElementById("rows").value);
     tableCols = parseInt(document.getElementById("cols").value);
