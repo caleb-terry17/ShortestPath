@@ -11,6 +11,7 @@ let red = "#E70000";
 let yellow = "#FFF827";
 let green = "#00E700";
 let blue = "#0000FF";
+let lightBlue = "#ABCDEF";
 let white = "#FFF";
 let selectionColor = yellow;  // starts out as yellow (barriers)
 let selectionLetter = 'y';
@@ -219,7 +220,7 @@ function computeSP() {
         // color the min button as searched
         if (searchTable[min.row][min.col].value != 'g' && 
             searchTable[min.row][min.col].value != 'r') {
-            table.children[min.row].children[min.col].children[0].style.background = blue;
+            table.children[min.row].children[min.col].children[0].style.background = lightBlue;
         }
     }
 }
