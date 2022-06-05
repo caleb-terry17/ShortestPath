@@ -61,7 +61,7 @@ function renderTable() {
         let tr = document.createElement('tr');
         // creating each column in the row
         for (let col = 0; col < tableCols; ++col) {
-            searchTable[row][col] = {"value": 'e', "parent": null, "depth": Infinity};  // button is currently empty
+            searchTable[row][col] = {"value": 'e', "parent": {"row": null, "col": null}, "depth": Infinity};  // button is currently empty
             // creating tags for row, col index of table
             let button = document.createElement('button');
             let td = document.createElement('td');
@@ -212,7 +212,10 @@ function computeSP() {
 
                 // relax vertex
                 if (searchTable[min.row + rOffset][min.col + cOffset].depth > searchTable[min.row][min.col].depth + 1) {
+                    // new depth
                     searchTable[min.row + rOffset][min.col + cOffset].depth = searchTable[min.row][min.col].depth + 1;
+                    // new parent
+                    searchTable[min.row + rOffset][min.col + cOffset].parent = {"row": min.row, "col": min.col};
                 }
             }
         }
@@ -222,5 +225,30 @@ function computeSP() {
             searchTable[min.row][min.col].value != 'r') {
             table.children[min.row].children[min.col].children[0].style.background = lightBlue;
         }
+    }
+    
+    // trace from end to start to find path and color it; also compute distance
+    let distance = searchTable[endPos.row][endPos.col].depth;
+    console.log("distance: " + distance);
+    let currPos = endPos.parent;
+
+    console.log(endPos.parent);
+
+    for (let i = 0; i < tableRows; ++i) {
+        for (let j = 0; j < tableCols; ++j) {
+            console.log("r: " + searchTable[i][j].parent.row);
+            console.log("c: " + searchTable[i][j].parent.col);
+        }
+    }
+
+    while (currPos.row != startPos.row && currPos.col != startPos.col) {
+        console.log("cr: " + currPos.row);
+        console.log("cc: " + currPos.col);
+        console.log("sr: " + startPos.row);
+        console.log("sc: " + startPos.col);
+        // color current square blue as "path"
+        table.children[currPos.row].children[currPos.col].children[0].style.background = blue;
+        // goto child
+        currPos = currPos.parent;
     }
 }
