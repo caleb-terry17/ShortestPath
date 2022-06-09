@@ -17,13 +17,13 @@ let selectionColor = yellow;  // starts out as yellow (barriers)
 let selectionLetter = 'y';
 
 // number of each square
-let numRed = 0;
-let numYellow = 0;
-let numGreen = 0;
+let numRed;
+let numYellow;
+let numGreen;
 
 // start and end locations
-let startPos = {"row": null, "col": null};
-let endPos = {"row": null, "col": null};
+let startPos;
+let endPos;
 
 /////////
 // array to store the color of each button, it's parent in the search, and search cost
@@ -46,6 +46,15 @@ let tableRows, tableCols;
 
 // renders the table the user will see
 function renderTable() {
+    // number of each square
+    numRed = 0;
+    numYellow = 0;
+    numGreen = 0;
+
+    // start and end locations
+    startPos = {"row": null, "col": null};
+    endPos = {"row": null, "col": null};
+
     // checking if table and color buttons are already rendered
     if (table.children[0] !== undefined) { table.innerHTML = ""; }
     if (colorButtons.children[0] !== undefined) { colorButtons.innerHTML = ""; }
@@ -94,7 +103,7 @@ function renderTable() {
 // changes the color of the square selected to the "selection" color
 function select(row, col) {
     let button = table.children[row].children[col].children[0];  // button the user selected
-    console.log("before: " + searchTable[row][col].value + "-" + searchTable[row][col].parent + "-" + searchTable[row][col].depth);
+    // console.log("before: " + searchTable[row][col].value + "-" + searchTable[row][col].parent + "-" + searchTable[row][col].depth);
     // 'e' tells me that the button's color is currently set to empty
     if (searchTable[row][col].value == 'e') {
         // check that there's not already a red or green button if red or green
@@ -135,7 +144,7 @@ function select(row, col) {
         button.style.background = white;
         searchTable[row][col].value = 'e';
     }
-    console.log("after: " + searchTable[row][col].value + "-" + searchTable[row][col].parent + "-" + searchTable[row][col].depth);
+    // console.log("after: " + searchTable[row][col].value + "-" + searchTable[row][col].parent + "-" + searchTable[row][col].depth);
 }
 
 // changes the selection color
@@ -184,10 +193,23 @@ function computeSP() {
     while (queue.length > 0) {
         // sort to get min at beginning
         queue.sort((a, b) => {
-            return searchTable[a.row][a.col].depth < searchTable[b.row][b.col].depth;
+            return searchTable[a.row][a.col].depth - searchTable[b.row][b.col].depth;
         });
+
+        for (let i = 0; i < tableRows; ++i) {
+            let line = ""
+            for (let j = 0; j < tableCols; ++j) {
+                line += searchTable[i][j].depth + ", ";
+            }
+            console.log(line)
+        }
+        // console.log("---------")
+
         // remove min element from queue
         let min = queue.shift();
+
+        console.log("(" + min.row + ", " + min.col + ")")
+        console.log("---------")
 
         // for all of min's neighbors
             // each node has a 3x3 grid where it's the center,
@@ -204,8 +226,8 @@ function computeSP() {
                 }
 
                 // make sure not a barrier
-                console.log("r: " + (min.row + rOffset));
-                console.log("c: " + (min.col + cOffset));
+                // console.log("r: " + (min.row + rOffset));
+                // console.log("c: " + (min.col + cOffset));
                 if (searchTable[min.row + rOffset][min.col + cOffset].value == 'y') {
                     continue;
                 }
@@ -230,25 +252,39 @@ function computeSP() {
     // trace from end to start to find path and color it; also compute distance
     let distance = searchTable[endPos.row][endPos.col].depth;
     console.log("distance: " + distance);
-    let currPos = endPos.parent;
+    let currPos = searchTable[endPos.row][endPos.col].parent;
 
-    console.log(endPos.parent);
-
-    for (let i = 0; i < tableRows; ++i) {
-        for (let j = 0; j < tableCols; ++j) {
-            console.log("r: " + searchTable[i][j].parent.row);
-            console.log("c: " + searchTable[i][j].parent.col);
-        }
+    // endPos still has distance infinity => no path from start to finish
+    if (distance == Infinity) {
+        alert("there is no possible path from the start to end position");
+        return;
     }
 
-    while (currPos.row != startPos.row && currPos.col != startPos.col) {
-        console.log("cr: " + currPos.row);
-        console.log("cc: " + currPos.col);
-        console.log("sr: " + startPos.row);
-        console.log("sc: " + startPos.col);
+    // console.log(endPos.parent);
+
+    for (let i = 0; i < tableRows; ++i) {
+        let line = i + ": ";
+        for (let j = 0; j < tableCols; ++j) {
+            line += "(" + searchTable[i][j].parent.row + ", " + searchTable[i][j].parent.col + ", " + searchTable[i][j].depth + ", " + searchTable[i][j].value + ") ";
+            // console.log("r: " + searchTable[i][j].parent.row);
+            // console.log("c: " + searchTable[i][j].parent.col);
+        }
+        console.log(line)
+    }
+
+    while (currPos.row != startPos.row || currPos.col != startPos.col) {
+        // console.log("cr: " + currPos.row);
+        // console.log("cc: " + currPos.col);
+        // console.log("sr: " + startPos.row);
+        // console.log("sc: " + startPos.col);
         // color current square blue as "path"
+        table.children[currPos.row];
+        console.log("row: " + currPos.row);
+        console.log("col: " + currPos.col);
+        console.log("len: " +  table.children[currPos.row]);
+        table.children[currPos.row].children[currPos.col];
         table.children[currPos.row].children[currPos.col].children[0].style.background = blue;
         // goto child
-        currPos = currPos.parent;
+        currPos = searchTable[currPos.row][currPos.col].parent;
     }
 }
