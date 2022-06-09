@@ -33,7 +33,7 @@ let endPos;
 // y: button is yellow (barrier)
 // r: button is red (end point)
 // e: button is empty or blank
-// b: button is blue (path)
+// b: button is light blue (path)
 /////////
 // {"value": , "parent": , "depth": }
 let searchTable = [];
@@ -235,6 +235,7 @@ function computeSP() {
         if (searchTable[min.row][min.col].value != 'g' && 
             searchTable[min.row][min.col].value != 'r') {
             table.children[min.row].children[min.col].children[0].style.background = lightBlue;
+            searchTable[min.row][min.col].value = 'b';
         }
     }
     
