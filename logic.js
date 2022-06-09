@@ -26,6 +26,16 @@ let numGreen;
 let startPos;
 let endPos;
 
+///////////////////
+// delay functionality
+///////////////////
+// source for delay: https://alvarotrigo.com/blog/wait-1-second-javascript/
+function delay(milliseconds) {
+    return new Promise(resolve => {
+        setTimeout(resolve, milliseconds);
+    });
+}
+
 /////////
 // array to store the color of each button, it's parent in the search, and search cost
 // will also be used to run search on table
@@ -170,7 +180,19 @@ function setSelection(color) {
  * 4) relax each edge
  * 5) 
  */
-function computeSP() {
+async function computeSP() {
+    // checking that a start was selected
+    if (startPos.row == null && startPos.col == null) {
+        alert("must select a start position (green)");
+        return;
+    }
+
+    // checking that an end was selected
+    if (endPos.row == null && endPos.col == null) {
+        alert("must select an end position (red)");
+        return;
+    }
+
     // getting rid of compute button
     computeButton.innerHTML = "";
 
@@ -234,7 +256,10 @@ function computeSP() {
         // color the min button as searched
         if (searchTable[min.row][min.col].value != 'g' && 
             searchTable[min.row][min.col].value != 'r') {
+            // tile has been relaxed, color it
             table.children[min.row].children[min.col].children[0].style.background = lightBlue;
+            // adding delay to allow user to see search
+            await delay(100);
         }
     }
     
@@ -252,6 +277,8 @@ function computeSP() {
         // color the path
         table.children[currPos.row].children[currPos.col].children[0].style.background = blue;
         searchTable[currPos.row][currPos.col].value = 'b';
+        // adding delay to allow user to see path develop
+        await delay(100);
         // goto child
         currPos = searchTable[currPos.row][currPos.col].parent;
     }
