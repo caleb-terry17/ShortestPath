@@ -33,7 +33,7 @@ let endPos;
 // y: button is yellow (barrier)
 // r: button is red (end point)
 // e: button is empty or blank
-// b: button is light blue (path)
+// b: button is blue (path)
 /////////
 // {"value": , "parent": , "depth": }
 let searchTable = [];
@@ -235,7 +235,6 @@ function computeSP() {
         if (searchTable[min.row][min.col].value != 'g' && 
             searchTable[min.row][min.col].value != 'r') {
             table.children[min.row].children[min.col].children[0].style.background = lightBlue;
-            searchTable[min.row][min.col].value = 'b';
         }
     }
     
@@ -250,6 +249,9 @@ function computeSP() {
     }
 
     while (currPos.row != startPos.row || currPos.col != startPos.col) {
+        // color the path
+        table.children[currPos.row].children[currPos.col].children[0].style.background = blue;
+        searchTable[currPos.row][currPos.col].value = 'b';
         // goto child
         currPos = searchTable[currPos.row][currPos.col].parent;
     }
