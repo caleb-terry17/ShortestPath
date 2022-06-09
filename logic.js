@@ -259,7 +259,7 @@ async function computeSP() {
             // tile has been relaxed, color it
             table.children[min.row].children[min.col].children[0].style.background = lightBlue;
             // adding delay to allow user to see search
-            await delay(100);
+            await delay(25);
         }
     }
     
@@ -278,7 +278,7 @@ async function computeSP() {
         table.children[currPos.row].children[currPos.col].children[0].style.background = blue;
         searchTable[currPos.row][currPos.col].value = 'b';
         // adding delay to allow user to see path develop
-        await delay(100);
+        await delay(25);
         // goto child
         currPos = searchTable[currPos.row][currPos.col].parent;
     }
