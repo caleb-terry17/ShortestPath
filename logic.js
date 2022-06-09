@@ -5,6 +5,7 @@
 let table = document.getElementById("table");  // table to dispaly search
 let colorButtons = document.getElementById("colorButtons");  // div tag that will hold color selection buttons
 let computeButton = document.getElementById("compute");  // div tag that is used to hold the button to compute sp
+let distnaceDiv = document.getElementById("distance");  // div to show the distance once it's computed
 
 // colors
 let red = "#E70000";
@@ -59,8 +60,9 @@ function renderTable() {
     if (table.children[0] !== undefined) { table.innerHTML = ""; }
     if (colorButtons.children[0] !== undefined) { colorButtons.innerHTML = ""; }
 
-    // checking if compute button is already rendered
+    // checking if compute button or distance is already rendered
     if (computeButton.children[0] !== undefined) { computeButton.innerHTML = ""; }
+    if (distnaceDiv.children[0] !== undefined) { distnaceDiv.innerHTML = ""; }
 
     // filling table
     tableRows = parseInt(document.getElementById("rows").value);
@@ -171,6 +173,9 @@ function setSelection(color) {
  * 5) 
  */
 function computeSP() {
+    // getting rid of compute button
+    computeButton.innerHTML = "";
+
     // all vertices already set to null parent, inf depth
     // set source to null, 0
     searchTable[startPos.row][startPos.col].depth = 0;
@@ -287,4 +292,7 @@ function computeSP() {
         // goto child
         currPos = searchTable[currPos.row][currPos.col].parent;
     }
+
+    let tag = `<h3>Length of Shortest Path: ${distance}</h3>`;
+    distnaceDiv.innerHTML = tag;
 }
