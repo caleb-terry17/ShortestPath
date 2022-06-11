@@ -230,6 +230,10 @@ async function computeSP() {
             // sure it's not a barrier and it's not out of bounds
         for (let rOffset = -1; rOffset <= 1; ++rOffset) {
             for (let cOffset = -1; cOffset <= 1; ++cOffset) {
+                // if both 0, then depth can't be shortened
+                // => does nothing to relax this b/c it's not an actual edge
+                if (rOffset == 0 && cOffset == 0) { continue; }
+
                 // make sure it's within the bounds 
                 if (min.row + rOffset < 0 || 
                     min.row + rOffset >= tableRows ||
@@ -242,11 +246,14 @@ async function computeSP() {
                 if (searchTable[min.row + rOffset][min.col + cOffset].value == 'y') {
                     continue;
                 }
+                
+                // distance from min to offset position
+                let distance = Math.sqrt(Math.pow(rOffset, 2) + Math.pow(cOffset, 2));
 
                 // relax vertex
-                if (searchTable[min.row + rOffset][min.col + cOffset].depth > searchTable[min.row][min.col].depth + 1) {
+                if (searchTable[min.row + rOffset][min.col + cOffset].depth > searchTable[min.row][min.col].depth + distance) {
                     // new depth
-                    searchTable[min.row + rOffset][min.col + cOffset].depth = searchTable[min.row][min.col].depth + 1;
+                    searchTable[min.row + rOffset][min.col + cOffset].depth = searchTable[min.row][min.col].depth + distance;
                     // new parent
                     searchTable[min.row + rOffset][min.col + cOffset].parent = {"row": min.row, "col": min.col};
                 }
@@ -283,6 +290,6 @@ async function computeSP() {
         currPos = searchTable[currPos.row][currPos.col].parent;
     }
 
-    let tag = `<h3>Length of Shortest Path: ${distance}</h3>`;
+    let tag = `<h3>Length of Shortest Path: ${distance.toFixed(2)} units</h3>`;
     distnaceDiv.innerHTML = tag;
 }
