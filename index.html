@@ -20,7 +20,7 @@
     <div class="container">
         <h1 class="text">Shortest Path</h1>
         <p class="text">
-            &nbsp;&nbsp;&nbsp;&nbsp; 
+            &nbsp;&nbsp;&nbsp;&nbsp;The Shortest Path Problem is defined as finding a path in a graph between two vertices where the sum of all the edges along that path is minimized. 
         </p>
     </div>
 
@@ -28,9 +28,36 @@
     <div class="container">
         <h1 class="text">Approaches</h1>
 
-        <!--???-->
+        <!--Dijkstra's-->
+        <h3 class="text">Dijkstra's Algorithm</h3>
         <p class="text">
-            &nbsp;&nbsp;&nbsp;&nbsp; 
+            &nbsp;&nbsp;&nbsp;&nbsp;Dijkstra's Algorithm requires a source vertex and finds the shortest path from the source to every other vertex in the graph. Each vertex mush also contain two values, it's parent or the vertex that comes before it in the path and it's depth or distance from the source node. 
+
+            <br>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;1) Set every node's parent to NULL and depth to Infinity, set the source's depth to 0 since it is distance 0 from the source. 
+
+            <br>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;2) Create a minimum priority queue (based on each vertex's depth) and push every vertex onto it. 
+
+            <br>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;3) Pop the first vertex (vertex with smallest depth) and relax all it's adjacent vertices.
+
+            <br>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;4) Repeat step 3 until the queue is empty. 
+
+            <br>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;5) The shortest path from the source to the destination can be found by starting at the destination vertex and going to it's parent, then to that vertex's parent and so on all the way until you arrive at the source. 
+        </p>
+
+        <!--relaxing edges-->
+        <h3 class="text">What is Relaxing?</h3>
+        <p class="text">
+            &nbsp;&nbsp;&nbsp;&nbsp;Relaxing is the process of determining if the path from the source to the current vertex to the adjacent vertex is shorter than the current path to the adjacent vertex. 
         </p>
     </div>
 
